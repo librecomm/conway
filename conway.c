@@ -7,7 +7,6 @@
 #define RIGHT(x) (x+1)    <= COLS*ROWS && (x+1) % COLS > (x) % COLS
 #define UP(x)    (x-COLS) >= 0
 #define DOWN(x)  (x+COLS) <= COLS*ROWS
-#define XY(x,y)  (y)*COLS+(x)
 
 #define COLS 80
 #define ROWS 25
@@ -21,14 +20,6 @@ int
 main(int argc, char **argv)
 {
 	int cells[COLS*ROWS] = { 0 };
-
-	cells[XY(40,15)] = 1;
-	cells[XY(40,16)] = 1;
-	cells[XY(40,17)] = 1;
-	cells[XY(41,15)] = 1;
-	cells[XY(42,15)] = 1;
-	cells[XY(42,16)] = 1;
-	cells[XY(42,17)] = 1;
 
 	while (1) {
 		render(cells);
