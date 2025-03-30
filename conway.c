@@ -10,10 +10,10 @@
 #define DRAW(b,c,r) if (r*COLS+c <= COLS*ROWS)\
 				   b[r*COLS+c] = 1;
 
-/* config section */
 #define COLS 80
 #define ROWS 25
 #define GPS 60
+#define CELL '#'
 
 int  in(int cells[COLS*ROWS], char *path);
 int  adj(int cells[COLS*ROWS], size_t cell);
@@ -112,11 +112,9 @@ gen(int cells[COLS*ROWS])
 void
 render(int cells[COLS*ROWS])
 {
-	char buf[(COLS+1)*ROWS];
+	char buf[(COLS+1)*ROWS+7] = "\e[2J\e[H";
 
-	size_t j = 0;
-
-	(void)write(1, "\e[2J\e[H", 7);
+	size_t j = 7;
 
 	for(size_t i = 0; i < COLS*ROWS; i++) {
 		if (i % COLS == 0 && i != 0) {
@@ -124,8 +122,8 @@ render(int cells[COLS*ROWS])
 			j++;
 		}
 
-		buf[i+j] = ((cells[i] == 1) ? '#' : ' ');
+		buf[i+j] = ((cells[i] == 1) ? CELL : ' ');
 	}
 
-	(void)write(1, buf, (COLS+1)*ROWS);
+	(void)write(1, buf, (COLS+1)*ROWS+7);
 }
