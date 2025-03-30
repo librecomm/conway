@@ -1,7 +1,6 @@
 #define XOPEN_SOURCE 700
 
 #include <fcntl.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 #define LEFT(x)     (x-1)    >= 0         && (x-1) % COLS < (x) % COLS
