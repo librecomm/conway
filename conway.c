@@ -1,17 +1,22 @@
 #define XOPEN_SOURCE 700
 
+#include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#define LEFT(x)  (x-1)    >= 0         && (x-1) % COLS < (x) % COLS
-#define RIGHT(x) (x+1)    <= COLS*ROWS && (x+1) % COLS > (x) % COLS
-#define UP(x)    (x-COLS) >= 0
-#define DOWN(x)  (x+COLS) <= COLS*ROWS
+#define LEFT(x)     (x-1)    >= 0         && (x-1) % COLS < (x) % COLS
+#define RIGHT(x)    (x+1)    <= COLS*ROWS && (x+1) % COLS > (x) % COLS
+#define UP(x)       (x-COLS) >= 0
+#define DOWN(x)     (x+COLS) <= COLS*ROWS
+#define DRAW(b,c,r) if (r*COLS+c <= COLS*ROWS)\
+				   b[r*COLS+c] = 1;
 
+/* config section */
 #define COLS 80
 #define ROWS 25
 #define GPS 60
 
+int  in(int cells[COLS*ROWS], char *path);
 int  adj(int cells[COLS*ROWS], size_t cell);
 void gen(int cells[COLS*ROWS]);
 void render(int cells[COLS*ROWS]);
@@ -21,11 +26,52 @@ main(int argc, char **argv)
 {
 	int cells[COLS*ROWS] = { 0 };
 
+	if (argc != 2) {
+		(void)write(1, "usage: conway [file]\n", 21);
+		return 1;
+	}
+
+	if (in(cells, argv[1]) == -1)
+		return 1;
+
 	while (1) {
 		render(cells);
 		gen(cells);
 		usleep(1000000/GPS);
 	}
+
+	return 0;
+}
+
+int
+in(int cells[COLS*ROWS], char *path)
+{
+	int fd;
+	char buf[COLS*ROWS];
+	ssize_t buf_size;
+
+	if ((fd = open(path, O_RDONLY)) == -1)
+		return -1;
+
+	if ((buf_size = read(fd, buf, COLS*ROWS)) == -1)
+		return -1;
+
+	size_t row = 0;
+	size_t col = 0;
+
+	for (size_t i = 0; i < buf_size; i++) {
+		if (buf[i] == '\n') {
+			col = 0;
+			row++;
+		}
+
+		if (buf[i] != ' ' && buf[i] != '\n')
+			DRAW(cells,col,row);
+
+		col++;
+	}
+
+	return 0;
 }
 
 int
