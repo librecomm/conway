@@ -12,8 +12,7 @@
 
 #define COLS 80
 #define ROWS 25
-#define GPS 60
-#define CELL '#'
+#define GPS 10
 
 int  in(int cells[COLS*ROWS], char *path);
 int  adj(int cells[COLS*ROWS], size_t cell);
@@ -25,10 +24,8 @@ main(int argc, char **argv)
 {
 	int cells[COLS*ROWS] = { 0 };
 
-	if (argc != 2) {
-		(void)write(1, "usage: conway [file]\n", 21);
+	if (argc != 2)
 		return 1;
-	}
 
 	if (in(cells, argv[1]) == -1)
 		return 1;
@@ -112,7 +109,7 @@ gen(int cells[COLS*ROWS])
 void
 render(int cells[COLS*ROWS])
 {
-	char buf[(COLS+1)*ROWS+7] = "\e[2J\e[H";
+	char buf[(COLS+1)*ROWS+7] = "\x1b[2J\x1b[H";
 
 	size_t j = 7;
 
@@ -122,7 +119,7 @@ render(int cells[COLS*ROWS])
 			j++;
 		}
 
-		buf[i+j] = ((cells[i] == 1) ? CELL : ' ');
+		buf[i+j] = ((cells[i] == 1) ? '#' : ' ');
 	}
 
 	(void)write(1, buf, (COLS+1)*ROWS+7);
