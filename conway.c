@@ -1,6 +1,7 @@
-#define XOPEN_SOURCE 700
+#define _XOPEN_SOURCE 700
 
 #include <fcntl.h>
+#include <time.h>
 #include <unistd.h>
 
 #define LEFT(x)     (x-1)    >= 0         && (x-1) % COLS < (x) % COLS
@@ -29,11 +30,16 @@ main(int argc, char **argv)
 
 	if (in(cells, argv[1]) == -1)
 		return 1;
+	
+	struct timespec ts;
+
+	ts.tv_sec = 1 / GPS;
+	ts.tv_nsec = 1000000000 / GPS;
 
 	while (1) {
 		render(cells);
 		gen(cells);
-		usleep(1000000/GPS);
+		nanosleep(&ts, NULL);
 	}
 
 	return 0;
