@@ -13,7 +13,7 @@
 
 #define COLS 80
 #define ROWS 25
-#define GPS 10
+#define GPS 30
 
 int  in(int cells[COLS*ROWS], char *path);
 int  adj(int cells[COLS*ROWS], size_t cell);

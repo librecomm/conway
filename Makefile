@@ -9,5 +9,8 @@ build: conway.c
 install: build
 	mv ./conway $(PREFIX)/bin/
 
+uninstall: build
+	rm -f $(PREFIX)/bin/conway
+
 clean:
 	rm -f ./conway
